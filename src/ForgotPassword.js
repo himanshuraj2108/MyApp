@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {
+  Alert,
   StyleSheet,
   Text,
   TextInput,
@@ -7,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import {moderateScale} from 'react-native-size-matters';
+import auth from '@react-native-firebase/auth';
 
 const styles = StyleSheet.create({
   conatiner: {
@@ -63,6 +65,20 @@ const styles = StyleSheet.create({
 export const ForgotPassword = ({navigation}) => {
   const [email, setEmail] = useState('');
 
+  const handleForgotPassword = () => {
+    auth()
+      .sendPasswordResetEmail(email)
+      .then(() => {
+        Alert.alert(
+          'Email Sent',
+          'A password reset email has been sent to your email address.',
+        );
+      })
+      .catch(error => {
+        Alert.alert('Error', error.message);
+      });
+  };
+
   return (
     <View style={styles.conatiner}>
       <Text style={styles.resetPasswordInfoTextStyle}>
@@ -76,7 +92,7 @@ export const ForgotPassword = ({navigation}) => {
       />
       <TouchableOpacity
         style={styles.resetPasswordStyle}
-        onPress={() => navigation.navigate('')}>
+        onPress={() => handleForgotPassword()}>
         <Text style={styles.resetPasswordTextStyle}>RESET PASSWORD</Text>
       </TouchableOpacity>
       <View style={styles.bottomContainer}>
